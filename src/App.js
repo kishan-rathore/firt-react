@@ -6,21 +6,29 @@ import Person from  './components/person';
 class App extends Component {
   state = {
     person:[{
+      id: 0,
       name: 'kishan',
       age: 20
     },{
+      id: 1,
       name: 'gopal',
       age: 23
     }],
     showPerson: false
   };
 
-  nameChange = (event) =>{
-    this.setState({person:[{
-      name:event.target.value,
-      age: 19
-    }
-    ]})
+  nameChange = (event,id) =>{
+    const p = this.state.person.findIndex(per=>{
+      return per.id===id;
+    });
+    // const person = {
+    //   ...this.state.person[p]
+    // };
+    // person.name = event.target.value;
+    const persons = [...this.state.person];
+    // persons[p]=person
+    persons[p].name = event.target.value;
+    this.setState({person:persons})
   }
   togglePerson = () => {
     const show = this.state.showPerson;
@@ -31,7 +39,7 @@ class App extends Component {
 
   }
   deletePerson = (index) => {
-    const person= this.state.person;
+    const person= [...this.state.person];
     person.splice(index, 1);
     this.setState({person:person});
 
@@ -46,7 +54,9 @@ class App extends Component {
           return <Person
             click={()=>this.deletePerson(index)}
             name = {person.name}
-            age = {person.age} />
+            age = {person.age}
+            key={person.id}
+            change = {(event)=>this.nameChange(event,person.id)} />
 
         })}
       </div>
